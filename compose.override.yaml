@@ -1,10 +1,29 @@
-
 services:
+  symfony:
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      DATABASE_URL: "${DATABASE_URL:-postgresql://app:!ChangeMe!@database:5432/app?serverVersion=16&charset=utf8}"
 ###> doctrine/doctrine-bundle ###
   database:
     ports:
       - "5432"
 ###< doctrine/doctrine-bundle ###
+
+  grafana:
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD:-admin}
+      GF_SECURITY_ADMIN_EMAIL: ${GF_SECURITY_ADMIN_EMAIL:-admin@example.com}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_DATASOURCE_POSTGRES_HOST: ${GRAFANA_POSTGRES_HOST:-database}
+      GF_DATASOURCE_POSTGRES_DB: ${POSTGRES_DB:-app}
+      GF_DATASOURCE_POSTGRES_USER: ${POSTGRES_USER:-app}
+      GF_DATASOURCE_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
 
 ###> symfony/mailer ###
   mailer:
