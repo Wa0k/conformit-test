@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pilotage des risques &amp; conformité{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="dashboard">
+    <header class="dashboard__hero">
+        <div class="dashboard__hero-content">
+            <span class="dashboard__badge">Conformité &amp; Gouvernance</span>
+            <h1 class="dashboard__title">Vision unifiée de vos risques opérationnels</h1>
+            <p class="dashboard__subtitle">
+                Retrouvez en un clin d'œil l'évolution de vos incidents, la couverture des contrôles,
+                et l'efficacité des mesures correctives grâce à vos tableaux Grafana intégrés.
+            </p>
+            <div class="dashboard__cta-group">
+                <a class="dashboard__cta" href="#panels">Explorer les graphiques</a>
+                <a class="dashboard__cta dashboard__cta--ghost" href="{{ grafana_base_url }}" target="_blank" rel="noopener">Ouvrir Grafana</a>
+            </div>
+        </div>
+        <div class="dashboard__hero-metrics">
+            <div class="metric-card">
+                <span class="metric-card__label">Incidents surveillés</span>
+                <span class="metric-card__value">+128</span>
+                <span class="metric-card__trend metric-card__trend--up">+6% ce mois</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-card__label">Mesures correctives</span>
+                <span class="metric-card__value">42 actives</span>
+                <span class="metric-card__trend">78% livrées</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-card__label">Temps moyen de résolution</span>
+                <span class="metric-card__value">3.5 j</span>
+                <span class="metric-card__trend metric-card__trend--down">-1.2 j vs N-1</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="dashboard__panels" id="panels">
+        <div class="dashboard__section-header">
+            <div>
+                <h2>Vos graphiques Grafana</h2>
+                <p>Chaque carte est alimentée en temps réel par votre instance Grafana. Naviguez, zoomez et interagissez sans quitter l'espace Conformité.</p>
+            </div>
+            <div class="dashboard__legend">
+                <span class="legend-dot legend-dot--risk"></span>
+                <span>Incidents</span>
+                <span class="legend-dot legend-dot--control"></span>
+                <span>Contrôles</span>
+                <span class="legend-dot legend-dot--measure"></span>
+                <span>Mesures</span>
+            </div>
+        </div>
+
+        {% if panels is empty %}
+            <p class="dashboard__empty">Ajoutez vos panneaux Grafana dans la variable d'environnement <code>APP_GRAFANA_PANELS</code> pour les retrouver ici.</p>
+        {% else %}
+            <div class="panels-grid">
+                {% for panel in panels %}
+                    <article class="panel-card">
+                        <div class="panel-card__header">
+                            <div>
+                                <h3>{{ panel.title }}</h3>
+                                {% if panel.description %}
+                                    <p>{{ panel.description }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="panel-card__meta">
+                                <span>Actualisation {{ panel.refresh }}</span>
+                                <span>Org {{ panel.orgId }}</span>
+                            </div>
+                        </div>
+                        {% if panel.dashboardUid and panel.panelId %}
+                            <div class="panel-card__iframe">
+                                <iframe
+                                    src="{{ grafana_base_url }}/d-solo/{{ panel.dashboardUid }}?orgId={{ panel.orgId }}&amp;panelId={{ panel.panelId }}&amp;refresh={{ panel.refresh }}&amp;theme={{ panel.theme }}"
+                                    frameborder="0"
+                                    loading="lazy"
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
+                        {% else %}
+                            <div class="panel-card__placeholder">
+                                <p>Complétez <code>dashboardUid</code> et <code>panelId</code> pour ce panneau dans <code>APP_GRAFANA_PANELS</code>.</p>
+                            </div>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="dashboard__assistant">
+        <div class="assistant-card">
+            <div class="assistant-card__content">
+                <h2>Besoin d'une analyse ciblée&nbsp;?</h2>
+                <p>Utilisez l'assistant conversationnel pour demander des analyses sur votre base Postgres.
+                    Il s'appuie sur le RAG et fournit des insights contextualisés à partir des données affichées ci-dessus.</p>
+                <ul class="assistant-card__list">
+                    <li>Identifier les tendances des incidents critiques.</li>
+                    <li>Comparer l'efficacité des contrôles par unité.</li>
+                    <li>Suivre la mise en œuvre des plans d'action.</li>
+                </ul>
+            </div>
+            <div class="assistant-card__bubble">
+                <div class="assistant-bubble">
+                    <span class="assistant-bubble__title">Assistant conformité</span>
+                    <p class="assistant-bubble__message">«&nbsp;Posez-moi une question sur vos risques ou demandez un rapport synthétique.&nbsp;»</p>
+                    <button class="assistant-bubble__cta" type="button" data-assistant-trigger>Ouvrir le chat</button>
+                    <p class="assistant-bubble__status" data-assistant-status hidden>Connexion à l'agent en cours…</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

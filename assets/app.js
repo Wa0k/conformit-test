@@ -1,10 +1,30 @@
 import './bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
 import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+document.addEventListener('DOMContentLoaded', () => {
+    const trigger = document.querySelector('[data-assistant-trigger]');
+    const status = document.querySelector('[data-assistant-status]');
+    const bubble = trigger?.closest('.assistant-bubble');
+
+    if (!trigger || !status || !bubble) {
+        return;
+    }
+
+    trigger.addEventListener('click', () => {
+        if (trigger.disabled) {
+            return;
+        }
+
+        trigger.disabled = true;
+        bubble.classList.add('assistant-bubble--active');
+        status.hidden = false;
+        status.textContent = "Connexion à l'agent en cours…";
+
+        window.dispatchEvent(new CustomEvent('assistant:open'));
+
+        window.setTimeout(() => {
+            status.textContent = 'Assistant initialisé ! Posez votre première question.';
+            trigger.textContent = 'Assistant prêt';
+        }, 900);
+    });
+});
