@@ -1,5 +1,27 @@
-
 services:
+  symfony:
+    image: ghcr.io/symfonycorp/symfony-php:8.2
+    command: ["symfony", "serve", "--no-tls", "--ansi", "--port=8000", "--allow-http"]
+    working_dir: /srv/app
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./:/srv/app:rw,cached
+      - symfony_var:/srv/app/var:rw
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://app:!ChangeMe!@database:5432/app?serverVersion=16&charset=utf8}
+  grafana:
+    image: grafana/grafana:10.4.5
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - grafana_data:/var/lib/grafana:rw
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
+    environment:
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
 ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
@@ -23,3 +45,5 @@ volumes:
 ###> doctrine/doctrine-bundle ###
   database_data:
 ###< doctrine/doctrine-bundle ###
+  symfony_var:
+  grafana_data:
