@@ -3,14 +3,18 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{% block title %}Conformité &amp; Risques{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><rect fill='%230a1133' width='128' height='128' rx='32'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='54' fill='%23f4f6ff'>CR</text></svg>'">
+        <title>{% block title %}Portfolio créatif{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><rect fill='%23222831' width='128' height='128' rx='32'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='54' fill='%23FFD369'>PF</text></svg>'">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <meta name="description" content="Portfolio personnel moderne présentant compétences, parcours et projets créatifs.">
         {% block stylesheets %}{% endblock %}
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="app-body">
+    <body class="portfolio-body">
         {% block body %}{% endblock %}
     </body>
 </html>

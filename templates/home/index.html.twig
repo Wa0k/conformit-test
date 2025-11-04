@@ -1,120 +1,217 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Pilotage des risques &amp; conformité{% endblock %}
+{% block title %}Portfolio • Alex Martin{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
 {% endblock %}
 
 {% block body %}
-<div class="dashboard">
-    <header class="dashboard__hero">
-        <div class="dashboard__hero-content">
-            <span class="dashboard__badge">Conformité &amp; Gouvernance</span>
-            <h1 class="dashboard__title">Vision unifiée de vos risques opérationnels</h1>
-            <p class="dashboard__subtitle">
-                Retrouvez en un clin d'œil l'évolution de vos incidents, la couverture des contrôles,
-                et l'efficacité des mesures correctives grâce à vos tableaux Grafana intégrés.
-            </p>
-            <div class="dashboard__cta-group">
-                <a class="dashboard__cta" href="#panels">Explorer les graphiques</a>
-                <a class="dashboard__cta dashboard__cta--ghost" href="{{ grafana_base_url }}" target="_blank" rel="noopener">Ouvrir Grafana</a>
-            </div>
-        </div>
-        <div class="dashboard__hero-metrics">
-            <div class="metric-card">
-                <span class="metric-card__label">Incidents surveillés</span>
-                <span class="metric-card__value">+128</span>
-                <span class="metric-card__trend metric-card__trend--up">+6% ce mois</span>
-            </div>
-            <div class="metric-card">
-                <span class="metric-card__label">Mesures correctives</span>
-                <span class="metric-card__value">42 actives</span>
-                <span class="metric-card__trend">78% livrées</span>
-            </div>
-            <div class="metric-card">
-                <span class="metric-card__label">Temps moyen de résolution</span>
-                <span class="metric-card__value">3.5 j</span>
-                <span class="metric-card__trend metric-card__trend--down">-1.2 j vs N-1</span>
-            </div>
-        </div>
-    </header>
+<header class="site-header" id="top">
+    <div class="container site-header__inner">
+        <a class="brand" href="#top">Alex Martin</a>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">
+            <span class="nav-toggle__line"></span>
+            <span class="nav-toggle__line"></span>
+            <span class="nav-toggle__line"></span>
+            <span class="sr-only">Ouvrir le menu</span>
+        </button>
+        <nav class="site-nav" id="primary-nav">
+            <a href="#presentation">Accueil</a>
+            <a href="#skills">Compétences</a>
+            <a href="#journey">Parcours</a>
+            <a href="#projects">Projets</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </div>
+</header>
 
-    <section class="dashboard__panels" id="panels">
-        <div class="dashboard__section-header">
-            <div>
-                <h2>Vos graphiques Grafana</h2>
-                <p>Chaque carte est alimentée en temps réel par votre instance Grafana. Naviguez, zoomez et interagissez sans quitter l'espace Conformité.</p>
+<main class="main-content">
+    <section class="hero" id="presentation">
+        <div class="container hero__inner">
+            <div class="hero__content fade-up" data-animate>
+                <span class="hero__eyebrow">Bonjour, je suis Alex</span>
+                <h1 class="hero__title">Designer UX/UI &amp; Développeur Front-End</h1>
+                <p class="hero__subtitle">J'imagine et je réalise des expériences numériques vibrantes qui allient sens du détail, storytelling et performance. Je suis passionné par les interfaces accessibles et les animations subtiles qui donnent vie aux idées.</p>
+                <div class="hero__cta-group">
+                    <a class="btn btn--primary" href="#projects">Découvrir mes projets</a>
+                    <a class="btn btn--ghost" href="#contact">Me contacter</a>
+                </div>
+                <div class="hero__stats">
+                    <div class="stat-pill">
+                        <strong>6+</strong>
+                        <span>années d'expérience</span>
+                    </div>
+                    <div class="stat-pill">
+                        <strong>28</strong>
+                        <span>projets livrés</span>
+                    </div>
+                    <div class="stat-pill">
+                        <strong>8</strong>
+                        <span>clients internationaux</span>
+                    </div>
+                </div>
             </div>
-            <div class="dashboard__legend">
-                <span class="legend-dot legend-dot--risk"></span>
-                <span>Incidents</span>
-                <span class="legend-dot legend-dot--control"></span>
-                <span>Contrôles</span>
-                <span class="legend-dot legend-dot--measure"></span>
-                <span>Mesures</span>
-            </div>
-        </div>
-
-        {% if panels is empty %}
-            <p class="dashboard__empty">Ajoutez vos panneaux Grafana dans la variable d'environnement <code>APP_GRAFANA_PANELS</code> pour les retrouver ici.</p>
-        {% else %}
-            <div class="panels-grid">
-                {% for panel in panels %}
-                    <article class="panel-card">
-                        <div class="panel-card__header">
-                            <div>
-                                <h3>{{ panel.title }}</h3>
-                                {% if panel.description %}
-                                    <p>{{ panel.description }}</p>
-                                {% endif %}
-                            </div>
-                            <div class="panel-card__meta">
-                                <span>Actualisation {{ panel.refresh }}</span>
-                                <span>Org {{ panel.orgId }}</span>
-                            </div>
+            <div class="hero__visual fade-up" data-animate>
+                <div class="hero__portrait">
+                    <div class="hero__portrait-glow"></div>
+                    <div class="hero__portrait-frame">
+                        <span class="hero__portrait-tag">Explorateur créatif</span>
+                        <div class="hero__portrait-stars">
+                            <span></span>
+                            <span></span>
+                            <span></span>
                         </div>
-                        {% if panel.dashboardUid and panel.panelId %}
-                            <div class="panel-card__iframe">
-                                <iframe
-                                    src="{{ grafana_base_url }}/d-solo/{{ panel.dashboardUid }}?orgId={{ panel.orgId }}&amp;panelId={{ panel.panelId }}&amp;refresh={{ panel.refresh }}&amp;theme={{ panel.theme }}"
-                                    frameborder="0"
-                                    loading="lazy"
-                                    allowfullscreen
-                                ></iframe>
-                            </div>
-                        {% else %}
-                            <div class="panel-card__placeholder">
-                                <p>Complétez <code>dashboardUid</code> et <code>panelId</code> pour ce panneau dans <code>APP_GRAFANA_PANELS</code>.</p>
-                            </div>
-                        {% endif %}
-                    </article>
-                {% endfor %}
-            </div>
-        {% endif %}
-    </section>
-
-    <section class="dashboard__assistant">
-        <div class="assistant-card">
-            <div class="assistant-card__content">
-                <h2>Besoin d'une analyse ciblée&nbsp;?</h2>
-                <p>Utilisez l'assistant conversationnel pour demander des analyses sur votre base Postgres.
-                    Il s'appuie sur le RAG et fournit des insights contextualisés à partir des données affichées ci-dessus.</p>
-                <ul class="assistant-card__list">
-                    <li>Identifier les tendances des incidents critiques.</li>
-                    <li>Comparer l'efficacité des contrôles par unité.</li>
-                    <li>Suivre la mise en œuvre des plans d'action.</li>
-                </ul>
-            </div>
-            <div class="assistant-card__bubble">
-                <div class="assistant-bubble">
-                    <span class="assistant-bubble__title">Assistant conformité</span>
-                    <p class="assistant-bubble__message">«&nbsp;Posez-moi une question sur vos risques ou demandez un rapport synthétique.&nbsp;»</p>
-                    <button class="assistant-bubble__cta" type="button" data-assistant-trigger>Ouvrir le chat</button>
-                    <p class="assistant-bubble__status" data-assistant-status hidden>Connexion à l'agent en cours…</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-</div>
+
+    <section class="section skills" id="skills">
+        <div class="container">
+            <div class="section__header fade-up" data-animate>
+                <h2>Compétences</h2>
+                <p>Une approche hybride entre design centré utilisateur et développement front-end, pour livrer des expériences cohérentes et performantes.</p>
+            </div>
+            <div class="skills__grid">
+                <article class="skill-card fade-up" data-animate data-delay="0">
+                    <div class="skill-card__icon">🎨</div>
+                    <h3>Design &amp; UX Research</h3>
+                    <ul>
+                        <li>Ateliers de co-création</li>
+                        <li>Prototypage haute fidélité</li>
+                        <li>Tests utilisateurs</li>
+                    </ul>
+                </article>
+                <article class="skill-card fade-up" data-animate data-delay="100">
+                    <div class="skill-card__icon">💻</div>
+                    <h3>Développement Front-End</h3>
+                    <ul>
+                        <li>React, Vue &amp; Symfony</li>
+                        <li>Accessibilité (RGAA)</li>
+                        <li>Performance Web</li>
+                    </ul>
+                </article>
+                <article class="skill-card fade-up" data-animate data-delay="200">
+                    <div class="skill-card__icon">⚙️</div>
+                    <h3>Outils &amp; Workflow</h3>
+                    <ul>
+                        <li>Figma, Framer, After Effects</li>
+                        <li>Design systems scalables</li>
+                        <li>Automatisation &amp; CI/CD</li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section timeline" id="journey">
+        <div class="container">
+            <div class="section__header fade-up" data-animate>
+                <h2>Parcours</h2>
+                <p>Un chemin entre agences créatives et scale-ups produit pour façonner des expériences utiles et mémorables.</p>
+            </div>
+            <div class="timeline__track">
+                <article class="timeline__item fade-up" data-animate>
+                    <div class="timeline__badge">2023 - Aujourd'hui</div>
+                    <h3>Lead Product Designer · NovaTech</h3>
+                    <p>Conception d'un design system multi-marque et pilotage des tests utilisateurs sur un produit SaaS utilisé par 40k clients.</p>
+                </article>
+                <article class="timeline__item fade-up" data-animate>
+                    <div class="timeline__badge">2020 - 2023</div>
+                    <h3>UX/UI Designer · Studio Cosmos</h3>
+                    <p>Création de parcours immersifs pour des expériences AR/VR et refontes web à forte identité visuelle.</p>
+                </article>
+                <article class="timeline__item fade-up" data-animate>
+                    <div class="timeline__badge">2018 - 2020</div>
+                    <h3>Développeur Front-End · PixelWave</h3>
+                    <p>Mise en place d'architectures modulaires, intégrations animées et optimisation des performances Lighthouse.</p>
+                </article>
+                <article class="timeline__item fade-up" data-animate>
+                    <div class="timeline__badge">2016</div>
+                    <h3>Master Design d'Interaction · ENSCI</h3>
+                    <p>Spécialisation en ergonomie cognitive, méthodes agiles et prototypage rapide.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section projects" id="projects">
+        <div class="container">
+            <div class="section__header fade-up" data-animate>
+                <h2>Projets sélectionnés</h2>
+                <p>Une sélection de projets où stratégie, narration visuelle et micro-interactions se rencontrent.</p>
+            </div>
+            <div class="projects__grid">
+                <article class="project-card fade-up" data-animate>
+                    <a class="project-card__link" href="#" aria-label="Détail du projet Horizon" tabindex="0">
+                        <div class="project-card__image project-card__image--horizon"></div>
+                        <div class="project-card__overlay">
+                            <span class="project-card__tag">Web Design</span>
+                            <h3>Horizon Space Lab</h3>
+                            <p>Exploration immersive pour un centre de recherche spatial.</p>
+                        </div>
+                    </a>
+                </article>
+                <article class="project-card fade-up" data-animate data-delay="100">
+                    <a class="project-card__link" href="#" aria-label="Détail du projet Aurora">
+                        <div class="project-card__image project-card__image--aurora"></div>
+                        <div class="project-card__overlay">
+                            <span class="project-card__tag">Branding</span>
+                            <h3>Aurora Festival</h3>
+                            <p>Identité lumineuse et site interactif pour un festival d'arts numériques.</p>
+                        </div>
+                    </a>
+                </article>
+                <article class="project-card fade-up" data-animate data-delay="200">
+                    <a class="project-card__link" href="#" aria-label="Détail du projet Atlas">
+                        <div class="project-card__image project-card__image--atlas"></div>
+                        <div class="project-card__overlay">
+                            <span class="project-card__tag">Produit</span>
+                            <h3>Atlas Dashboard</h3>
+                            <p>Plateforme analytique pour équipes produit, centrée sur la clarté et la collaboration.</p>
+                        </div>
+                    </a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section contact" id="contact">
+        <div class="container contact__inner">
+            <div class="contact__content fade-up" data-animate>
+                <h2>Construisons quelque chose d'exceptionnel</h2>
+                <p>Envie de collaborer sur un produit ambitieux, une refonte ou un design system&nbsp;? Écrivez-moi, je réponds sous 24h.</p>
+                <div class="contact__socials">
+                    <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+                    <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+                    <a href="https://dribbble.com" target="_blank" rel="noreferrer">Dribbble</a>
+                </div>
+            </div>
+            <form class="contact__form fade-up" data-animate>
+                <div class="form-group">
+                    <label for="name">Nom</label>
+                    <input id="name" name="name" type="text" placeholder="Votre nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" placeholder="vous@exemple.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Décrivez votre projet"></textarea>
+                </div>
+                <button class="btn btn--primary" type="submit">Envoyer</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container site-footer__inner">
+        <p>&copy; {{ "now"|date("Y") }} Alex Martin. Portfolio conçu avec passion et une touche cosmique.</p>
+        <a class="site-footer__top" href="#top">Retour en haut</a>
+    </div>
+</footer>
 {% endblock %}
