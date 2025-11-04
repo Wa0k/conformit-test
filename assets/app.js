@@ -2,29 +2,70 @@ import './bootstrap.js';
 import './styles/app.css';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const trigger = document.querySelector('[data-assistant-trigger]');
-    const status = document.querySelector('[data-assistant-status]');
-    const bubble = trigger?.closest('.assistant-bubble');
+    const navToggle = document.querySelector('.nav-toggle');
+    const nav = document.querySelector('.site-nav');
 
-    if (!trigger || !status || !bubble) {
-        return;
+    if (navToggle && nav) {
+        const toggleNav = () => {
+            const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+            navToggle.setAttribute('aria-expanded', String(!expanded));
+            nav.classList.toggle('is-open', !expanded);
+        };
+
+        navToggle.addEventListener('click', () => {
+            toggleNav();
+        });
+
+        nav.addEventListener('click', (event) => {
+            if (event.target instanceof HTMLAnchorElement && nav.classList.contains('is-open')) {
+                toggleNav();
+            }
+        });
     }
 
-    trigger.addEventListener('click', () => {
-        if (trigger.disabled) {
-            return;
-        }
+    const animatedElements = document.querySelectorAll('[data-animate]');
 
-        trigger.disabled = true;
-        bubble.classList.add('assistant-bubble--active');
-        status.hidden = false;
-        status.textContent = "Connexion à l'agent en cours…";
+    if (animatedElements.length > 0 && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        const delay = target.getAttribute('data-delay');
 
-        window.dispatchEvent(new CustomEvent('assistant:open'));
+                        if (delay) {
+                            target.style.transitionDelay = `${Number(delay) / 1000}s`;
+                        }
 
-        window.setTimeout(() => {
-            status.textContent = 'Assistant initialisé ! Posez votre première question.';
-            trigger.textContent = 'Assistant prêt';
-        }, 900);
+                        target.classList.add('is-visible');
+                        observer.unobserve(target);
+                    }
+                });
+            },
+            {
+                threshold: 0.2,
+            },
+        );
+
+        animatedElements.forEach((element) => observer.observe(element));
+    } else {
+        animatedElements.forEach((element) => element.classList.add('is-visible'));
+    }
+
+    const internalLinks = document.querySelectorAll('a[href^="#"]');
+    internalLinks.forEach((link) => {
+        link.addEventListener('click', (event) => {
+            const targetId = link.getAttribute('href');
+            if (!targetId || targetId === '#' || targetId.length <= 1) {
+                return;
+            }
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                event.preventDefault();
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                history.replaceState(null, '', targetId);
+            }
+        });
     });
 });
